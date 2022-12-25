@@ -1,13 +1,69 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+a{
+    text-decoration: none;
+}
+ul,ol{
+    list-style-type: none;
+}
+/* ========= Registration Page =========== */
+.reg_title{
+    color: #11175D;
+    font-family: 'Nunito', sans-serif;
+    font-size: 34.4px;
+    line-height: 47px;
+    font-weight: 700;
+}
+.reg_subtitle{
+    font-size: 20.64px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+    color: #000;
+    line-height: 28px;
+    margin-top: 13px;
+}
+.input_main{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 35px;
+    margin-top: 40px;
+}
+.input_main input{
+    width: 368px;
+}
+.reg_btn{
+    margin-top: 30px;
+    display: inline-block;
+}
+.reg_left_main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.reg_auth{
+    text-align: center;
+    margin-top: 30px;
+    color: #03014C;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+}
+.reg_auth a{
+    color: #EA6C00;
+    font-weight: 700;
+    padding-left: 5px;
+    text-transform: capitalize;
+}
+.reg_img{
+    width: 100%;
+    height: 100vh;
+    line-height: 0;
+    object-fit: cover;
+}
+.google_auth_img{
+    margin-top: 30px;
 }
