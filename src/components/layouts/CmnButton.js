@@ -5,7 +5,7 @@ const CmnButton = (props) => {
 
 
   return (
-    <props.bname variant="contained" disableRipple>{props.title}</props.bname>
+    <props.bname onClick={props.click} variant="contained" disableRipple>{props.title}</props.bname>
   )
 }
 

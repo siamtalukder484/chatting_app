@@ -4,11 +4,11 @@ import TextField from '@mui/material/TextField';
 // import InputBase from '@mui/material/InputBase';
 
 
-const InputBox = ({label,variant,className,type}) => {
+const InputBox = ({label,variant,className,type,textChange,name}) => {
 
   return (
     <>
-        <TextField className={className} type={type} label={label} variant={variant} />
+        <TextField onChange={textChange} name={name} className={className} type={type} label={label} variant={variant} />
     </>
   )
 }

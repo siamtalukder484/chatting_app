@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../heading/Header'
 import Heading from '../heading/Heading'
 import Grid from '@mui/material/Grid';
@@ -40,6 +40,40 @@ const Register = () => {
     },
   });
 
+  let [formData, setFormdata] = useState({
+    email: "",
+    full_name: "",
+    password: "",
+    c_password: "",
+  });
+  let hundleForm = (e) =>{
+    let {name,value} = e.target
+    setFormdata ({
+      ...formData,
+      [name]:value
+    })
+    console.log(formData)
+  }
+  let hundleClick = () =>{
+    console.log("ami click")
+  }
+  // let hundleForm = (e) =>{
+  //   if(e.target.name == "email"){
+  //     setFormdata({...formData,email:e.target.value})
+  //     console.log(formData)
+  //   }else if(e.target.name == "full_name"){
+  //     setFormdata({...formData,full_name:e.target.value})
+  //     console.log(formData)
+  //   }else{
+  //     setFormdata({...formData,password:e.target.value})
+  //     console.log(formData)
+  //   };
+  // }
+// let hundleTextInput = (e) =>{
+//   console.log(e.target.value);
+// }
+
+
   return (
     <>
       <Grid container spacing={2}>
@@ -50,12 +84,13 @@ const Register = () => {
                   <p className='reg_subtitle'>Free register and you can enjoy it</p>
               </Header>
               <div className='input_main'>
-                <InputBox className='reg_email' type='email' label='Email Address' variant='outlined'/>
-                <InputBox className='reg_name' type='text' label='Full Name' variant='outlined'/>
-                <InputBox className='reg_password' type='password' label='Password' variant='outlined'/>
+                <InputBox textChange={hundleForm} name="email" className='reg_email' type='email' label='Email Address' variant='outlined'/>
+                <InputBox textChange={hundleForm} name="full_name" className='reg_name' type='text' label='Full Name' variant='outlined'/>
+                <InputBox textChange={hundleForm} name="password" className='reg_password' type='password' label='Password' variant='outlined'/>
+                <InputBox textChange={hundleForm} name="c_password" className='reg_password' type='password' label='Password' variant='outlined'/>
               </div>
               <div className='reg_btn'>
-                <CmnButton bname={CommonBtn} title="sign up"/>
+                <CmnButton click={hundleClick} bname={CommonBtn} title="sign up"/>
                 <Authentication className='reg_auth' title='Already have an account?' href='/' hreftitle='sign in'/>
               </div>
           </div>

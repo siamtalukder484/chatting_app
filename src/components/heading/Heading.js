@@ -1,7 +1,6 @@
 import React from 'react'
 
 const Heading = (props) => {
-  console.log(props.as)
   return (
         props.as === undefined
         ?
