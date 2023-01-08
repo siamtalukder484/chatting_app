@@ -72,16 +72,16 @@ const Register = () => {
   }
 
   let hundleClick = () =>{
-    if(formData.email == ""){
+    if(formData.email === ""){
       setError({...error,email: "Email dao"})
     }
-    else if(formData.full_name == ""){
+    else if(formData.full_name === ""){
       setError({...error,full_name: "Name dao"})
     }
-    else if(formData.password == ""){
+    else if(formData.password === ""){
       setError({...error,password: "password dao"})
     }
-    else if(formData.c_password == ""){
+    else if(formData.c_password === ""){
       setError({...error,c_password: "Confirm Password dao"})
     }
     else if(formData.c_password !== formData.password){
