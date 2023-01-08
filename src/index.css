@@ -67,9 +67,13 @@ ul,ol{
 .google_auth_img{
     margin-top: 30px;
 }
-.error{
+.reg_error_alert{
     padding: 0 16px !important;
     margin-top: 8px;
+}
+.reg_suc_alert{
+    padding: 0 16px !important;
+    margin-bottom: 15px;
 }
 .input_grp{
     position: relative;
@@ -77,12 +81,7 @@ ul,ol{
 .openeye{
     position: absolute;
     right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
+    top: 16px;
     cursor: pointer;
     font-size: 25px;
 }

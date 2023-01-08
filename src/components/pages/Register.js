@@ -44,7 +44,10 @@ const Register = () => {
     },
   });
 
-  let [show, setShow] = useState(false);
+  let [success, setSuccess] = useState();
+  let [showPass, setPass] = useState(false);
+  let [showcpass, setCpass] = useState(false);
+
   let [formData, setFormdata] = useState({
     email: "",
     full_name: "",
@@ -52,7 +55,6 @@ const Register = () => {
     c_password: "",
   });
 
-  
   let [error, setError] = useState({
     email: "",
     full_name: "",
@@ -82,11 +84,21 @@ const Register = () => {
     else if(formData.c_password == ""){
       setError({...error,c_password: "Confirm Password dao"})
     }
+    else if(formData.c_password !== formData.password){
+      setError({...error,c_password: "Password not semilar"})
+    }
     else{
       createUserWithEmailAndPassword(auth,formData.email,formData.password).then((user)=>{
         sendEmailVerification(auth.currentUser)
           .then(() => {
-            console.log("Email send")
+            setSuccess("Registration Successfully !!!")
+            setFormdata({
+              email: "",
+              full_name: "",
+              password: "",
+              c_password: "",
+            });
+            console.log(formData)
           });
       }).catch((error)=>{
         const errorCode = error.code;
@@ -126,9 +138,14 @@ const Register = () => {
               </Header>
               <div className='input_main'>
                 <div className='input_grp'>
+                    {success &&
+                      <Alert className='reg_suc_alert' variant="filled" severity="success">
+                          {success}
+                      </Alert>
+                    }
                     <InputBox textChange={hundleForm} name="email" className='reg_email' type='email' label='Email Address' variant='outlined'/>
                     {error.email &&
-                      <Alert className='error' variant="filled" severity="error">
+                      <Alert className='reg_error_alert' variant="filled" severity="error">
                           {error.email}
                       </Alert>
                     }
@@ -136,29 +153,35 @@ const Register = () => {
                 <div className='input_grp'>
                     <InputBox textChange={hundleForm} name="full_name" className='reg_name' type='text' label='Full Name' variant='outlined'/>
                     {error.full_name &&
-                      <Alert className='error' variant="filled" severity="error">
+                      <Alert className='reg_error_alert' variant="filled" severity="error">
                           {error.full_name}
                       </Alert>
                     }
                 </div>
                 <div className='input_grp'>
-                    <InputBox textChange={hundleForm} name="password" className='reg_password' type={show ? "text" : "password"} label='Password' variant='outlined'/>
-                    {show 
+                    <InputBox textChange={hundleForm} name="password" className='reg_password' type={showPass ? "text" : "password"} label='Password' variant='outlined'/>
+                    {showPass 
                     ?
-                    <AiFillEye onClick={()=>setShow(false)} className='openeye'/>
+                    <AiFillEye onClick={()=>setPass(false)} className='openeye'/>
                     :
-                    <AiFillEyeInvisible onClick={()=>setShow(true)} className='openeye'/>
+                    <AiFillEyeInvisible onClick={()=>setPass(true)} className='openeye'/>
                     }
                     {error.password &&
-                      <Alert className='error' variant="filled" severity="error">
+                      <Alert className='reg_error_alert' variant="filled" severity="error">
                           {error.password}
                       </Alert>
                     }
                 </div>
                 <div className='input_grp'>
-                    <InputBox textChange={hundleForm} name="c_password" className='reg_password' type='password' label='Confirm Password' variant='outlined'/>
+                    <InputBox textChange={hundleForm} name="c_password" className='reg_password' type={showcpass ? "text" : "password"} label='Confirm Password' variant='outlined'/>
+                    {showcpass 
+                    ?
+                    <AiFillEye onClick={()=>setCpass(false)} className='openeye'/>
+                    :
+                    <AiFillEyeInvisible onClick={()=>setCpass(true)} className='openeye'/>
+                    }
                     {error.c_password &&
-                      <Alert className='error' variant="filled" severity="error">
+                      <Alert className='reg_error_alert' variant="filled" severity="error">
                           {error.c_password}
                       </Alert>
                     }
