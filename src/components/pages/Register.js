@@ -11,11 +11,17 @@ import Authentication from '../authentication/Authentication';
 import Alert from '@mui/material/Alert';
 import {AiFillEye,AiFillEyeInvisible} from "react-icons/ai";
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification} from "firebase/auth";
+import LinearProgress from '@mui/material/LinearProgress';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Puff } from  'react-loader-spinner'
 // import InputBox from '../heading/InputBox'
 
 
 const Register = () => {
   const auth = getAuth();
+  let navigate = useNavigate();
 
   const CommonBtn = styled(Button)({
     width: "395px",
@@ -47,6 +53,8 @@ const Register = () => {
   let [success, setSuccess] = useState();
   let [showPass, setPass] = useState(false);
   let [showcpass, setCpass] = useState(false);
+  let [loader, setLoader] = useState(false);
+  let [progress, setProgress] = useState(0);
 
   let [formData, setFormdata] = useState({
     email: "",
@@ -63,44 +71,99 @@ const Register = () => {
   })
 
   let hundleForm = (e) =>{
-    let {name,value} = e.target
-    setFormdata ({
-      ...formData,
+    let {name,value} = e.target 
+    setFormdata ((prev)=>({
+      ...prev,
       [name]:value
-    })
+    }))
+    let capital = /[A-Z]/
+    let lower = /[a-z]/
+    let number = /[0-9]/
+    if(name == "password"){
+      if(!capital.test(value)){
+        setError({...error,password: "One capital letter required"})
+        // setProgress(progress-25)
+        return
+      }
+      // else{
+      //   if(progress < 100){
+      //     setProgress(progress+25)
+      //   }
+      // }
+      else if(!lower.test(value)){
+        setError({...error,password: "One lower letter required"})
+        return
+      }
+      // else{
+      //   if(progress < 100){
+      //     setProgress(progress+25)
+      //   }
+      // }
+      else if(!number.test(value)){
+        setError({...error,password: "One number required"})
+        return
+      }
+      // else{
+      //   if(progress < 100){
+      //     setProgress(progress+25)
+      //   }
+      // }
+      else if(value.length < 8){
+        setError({...error,password: "Password length atleast 8"})
+        return
+      }
+      // else{
+      //   if(progress < 100){
+      //     setProgress(progress+25)
+      //   }
+      // }
+    }
+
     setError({...error,[name]: ""})
+    console.log(formData)
   }
 
   let hundleClick = () =>{
+    // setLoader(true)
+    let email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if(formData.email === ""){
-      setError({...error,email: "Email dao"})
+      setLoader(false)
+      setError({...error,email: "Email address required"})
+    }
+    else if(!email_regex.test(formData.email)){
+      setLoader(false)
+      setError({...error,email: "Valid Email address required"})
     }
     else if(formData.full_name === ""){
-      setError({...error,full_name: "Name dao"})
+      setLoader(false)
+      setError({...error,full_name: "Name required"})
     }
     else if(formData.password === ""){
-      setError({...error,password: "password dao"})
+      setLoader(false)
+      setError({...error,password: "Password required"})
     }
     else if(formData.c_password === ""){
-      setError({...error,c_password: "Confirm Password dao"})
+      setLoader(false)
+      setError({...error,c_password: "Confirm Password required"})
     }
     else if(formData.c_password !== formData.password){
-      setError({...error,c_password: "Password not semilar"})
+      setLoader(false)
+      setError({...error,c_password: "Confirm Password and Password not matched"})
     }
     else{
+      setLoader(true)
       createUserWithEmailAndPassword(auth,formData.email,formData.password).then((user)=>{
         sendEmailVerification(auth.currentUser)
           .then(() => {
-            setSuccess("Registration Successfully !!!")
-            setFormdata({
-              email: "",
-              full_name: "",
-              password: "",
-              c_password: "",
-            });
-            console.log(formData)
+            setLoader(false)
+            toast("Registration Successfully");
+            setTimeout(()=>{
+              navigate("/")
+            },2000)
+            // setSuccess("Registration Successfully !!!")
           });
       }).catch((error)=>{
+        setLoader(false)
         const errorCode = error.code;
         if(errorCode.includes("auth/email-already-in-use")){
           setError({...error,email: "Email already existed"})
@@ -108,7 +171,6 @@ const Register = () => {
         
       })
     }
-  
   }
   // let hundleForm = (e) =>{
   //   if(e.target.name == "email"){
@@ -130,6 +192,7 @@ const Register = () => {
   return (
     <>
       <Grid container spacing={2}>
+      <ToastContainer />
         <Grid className='reg_left_main' item xs={6}>
           <div className='reg_left'>
               <Header>
@@ -160,6 +223,7 @@ const Register = () => {
                 </div>
                 <div className='input_grp'>
                     <InputBox textChange={hundleForm} name="password" className='reg_password' type={showPass ? "text" : "password"} label='Password' variant='outlined'/>
+                    {/* <LinearProgress variant="buffer" value={progress} className="pass_pro"/> */}
                     {showPass 
                     ?
                     <AiFillEye onClick={()=>setPass(false)} className='openeye'/>
@@ -189,7 +253,21 @@ const Register = () => {
                 
               </div>
               <div className='reg_btn'>
-                <CmnButton click={hundleClick} bname={CommonBtn} title="sign up"/>
+                
+                {loader ?
+                <Puff
+                    height="80"
+                    width="80"
+                    radius={1}
+                    color="#4fa94d"
+                    ariaLabel="puff-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                  />
+                  :
+                  <CmnButton click={hundleClick} bname={CommonBtn} title="sign up"/>
+                }
                 <Authentication className='reg_auth' title='Already have an account?' href='/' hreftitle='sign in'/>
               </div>
           </div>

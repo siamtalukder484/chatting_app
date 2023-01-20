@@ -66,6 +66,7 @@ ul,ol{
 }
 .google_auth_img{
     margin-top: 30px;
+    cursor: pointer;
 }
 .reg_error_alert{
     padding: 0 16px !important;
@@ -84,4 +85,19 @@ ul,ol{
     top: 16px;
     cursor: pointer;
     font-size: 25px;
+}
+
+.pass_pro{
+    margin-top: 8px;
+}
+.forgot_auth{
+    margin-top: 10px;
+}
+.fgp_btn{
+    width: 100% !important;
+    margin-top: 20px;
+}
+.fgp_input{
+    width: 100%;
+    margin-bottom: 20px;
 }
