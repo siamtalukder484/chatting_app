@@ -10,16 +10,18 @@ import Button from '@mui/material/Button';
 import Authentication from '../authentication/Authentication';
 import Alert from '@mui/material/Alert';
 import {AiFillEye,AiFillEyeInvisible} from "react-icons/ai";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import LinearProgress from '@mui/material/LinearProgress';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Puff } from  'react-loader-spinner'
+import { getDatabase, set, ref, push } from "firebase/database";
 // import InputBox from '../heading/InputBox'
 
 
 const Register = () => {
+  const database = getDatabase();
   const auth = getAuth();
   let navigate = useNavigate();
 
@@ -154,14 +156,27 @@ const Register = () => {
       setLoader(true)
       createUserWithEmailAndPassword(auth,formData.email,formData.password).then((user)=>{
         sendEmailVerification(auth.currentUser)
-          .then(() => {
-            setLoader(false)
-            toast("Registration Successfully");
-            setTimeout(()=>{
-              navigate("/")
-            },2000)
-            // setSuccess("Registration Successfully !!!")
-          });
+          .then(() =>{
+            
+            updateProfile(auth.currentUser, {
+              displayName: formData.full_name, 
+              photoURL: "https://example.com/jane-q-user/profile.jpg"
+            }).then(() => {
+              set(ref(database, 'users/' + user.user.uid), {
+                displayName: user.user.displayName,
+                email: user.user.email,
+              }).then(()=>{
+                setLoader(false)
+                toast("Registration Successfully");
+                setTimeout(()=>{
+                  navigate("/")
+                },2000)
+              })
+            }).catch((error) => {
+              // An error occurred
+              // ...
+            });
+          })
       }).catch((error)=>{
         setLoader(false)
         const errorCode = error.code;

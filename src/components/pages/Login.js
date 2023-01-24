@@ -18,10 +18,8 @@ import { useDispatch } from 'react-redux'
 import { activeUser } from '../../slices/userSlices';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { yellow } from '@mui/material/colors';
-
 
 
 const Login = () => {
@@ -115,7 +113,7 @@ const Login = () => {
               dispatch(activeUser(userCredential.user))
               localStorage.setItem("userInfo",JSON.stringify(userCredential.user))
               if(userCredential.user.emailVerified){
-                navigate("/home")
+                navigate("/minder")
               }else{
                 toast("Please verify your email first.");
               }
@@ -133,7 +131,7 @@ const Login = () => {
       let hundleGoogleAuth = () =>{
         signInWithPopup(auth, provider)
         .then((result) => {
-            navigate("/home")
+            navigate("/minder")
         })
       }
       let buttonstyle={
@@ -169,8 +167,8 @@ const Login = () => {
                 <div className='reg_btn'>
                     <CmnButton click={hundleClick} bname={CommonBtn} title="Login to Continue"/>
                     <Authentication className='reg_auth' title="Don't have an account?" href='/registration' hreftitle='sign up'/>
-                    <Authentication className='reg_auth forgot_auth' title="Reset your password?" href="#" hreftitle='Click here'/>
-                    <Button onClick={handleOpen}>Forgot Password</Button>
+                    <Authentication onClick={handleOpen} className='reg_auth forgot_auth' title="Reset your password?" hreftitle='Click here'/>
+                    {/* <Button onClick={handleOpen}>Forgot Password</Button> */}
                     <Modal
                       open={open}
                       onClose={handleClose}

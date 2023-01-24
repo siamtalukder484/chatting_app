@@ -2,7 +2,7 @@ import React from 'react'
 
 const Images = ({ src,className,onClick }) => {
   return (
-    <img onClick={onClick} src={src} alt="Image_Not_Found" className={className}/>
+    <img onClick={onClick} src={src} alt="Not_Found" className={className}/>
   )
 }
 
