@@ -29,6 +29,7 @@ const RootLayout = () => {
   
     // ===== Crop Image Start =====
     const [image, setImage] = useState();
+    const [profile, setProfile] = useState("");
     const [cropData, setCropData] = useState("#");
     const [cropper, setCropper] = useState();
 
@@ -113,6 +114,21 @@ const RootLayout = () => {
     p: 4,
   };
   // ======= Modal Part End ========
+  <ToastContainer
+      position="top-center"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="dark"
+/>
+  useEffect(()=>{
+    setProfile(authname.userData.userInfo.photoURL)
+  },[authname])
 
   return (
     <>  
