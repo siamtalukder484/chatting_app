@@ -159,8 +159,7 @@ const Register = () => {
           .then(() =>{
             
             updateProfile(auth.currentUser, {
-              displayName: formData.full_name, 
-              photoURL: "https://example.com/jane-q-user/profile.jpg"
+              displayName: formData.full_name,
             }).then(() => {
               set(ref(database, 'users/' + user.user.uid), {
                 displayName: user.user.displayName,
