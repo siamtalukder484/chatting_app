@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import Grid from '@mui/material/Grid';
 import { Box } from '@mui/system';
 import Images from './Images';
@@ -137,24 +137,40 @@ const RootLayout = () => {
             <Grid item xs={2}>
                 <div className='sidebar_main'>
                     <div className='sidebar'>
-                      <div className='pro_img_holder'>
-                          <div className='pro_img_main'>
-                              <Images src={authname.userData.userInfo.photoURL} className='profile_img'/>
+                      <div>
+                          <div className='pro_img_holder'>
+                              <div className='pro_img_main'>
+                                  <Images src={authname.userData.userInfo.photoURL} className='profile_img'/>
+                              </div>
+                              <div onClick={handleOpen} className='profile_edit_btn'>
+                                <FiEdit2/>
+                              </div>
                           </div>
-                          <div onClick={handleOpen} className='profile_edit_btn'>
-                            <FiEdit2/>
+                          <div className='auth_name'>
+                              <h4>{authname.userData.userInfo.displayName}</h4>
                           </div>
                       </div>
-                        <div className='auth_name'>
-                            <h4>{authname.userData.userInfo.displayName}</h4>
-                        </div>
-                        <div className='side_nav'>
-                            <AiOutlineHome className='nav_icon'/>
-                            <AiOutlineMessage className='nav_icon'/>
-                            <IoMdNotificationsOutline className='nav_icon'/>
-                            <AiOutlineSetting className='nav_icon'/>
-                            <AiOutlineLogout onClick={hundleLogout} className='nav_icon'/>
-                        </div>
+                      <div>
+                          <div className='side_nav'>
+                                <NavLink to="">
+                                    <AiOutlineHome className='nav_icon'/>
+                                </NavLink>
+                                <NavLink to="message">
+                                    <AiOutlineMessage className='nav_icon'/>
+                                </NavLink>
+                                <NavLink to="notification">
+                                    <IoMdNotificationsOutline className='nav_icon'/>
+                                </NavLink>
+                                <NavLink to="settings">
+                                    <AiOutlineSetting className='nav_icon'/>
+                                </NavLink>
+                          </div>
+                      </div>
+                      <div className='logout_btn'>
+                          <AiOutlineLogout onClick={hundleLogout} className='nav_icon'/>
+                      </div>
+                      
+                        
                     </div>
                 </div>
                 <Modal

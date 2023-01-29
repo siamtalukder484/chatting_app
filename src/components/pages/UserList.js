@@ -5,13 +5,14 @@ import CmnButton from '../layouts/CmnButton';
 import HomeCmnBtn from '../layouts/HomeCmnBtn';
 import Images from "../layouts/Images"
 import SubTitle from '../heading/SubTitle';
-import { getDatabase, ref, onValue} from "firebase/database";
+import { getDatabase, ref, onValue, set, push} from "firebase/database";
 import { useSelector } from 'react-redux';
 
 const UserList = () => {
     let data = useSelector(state => state)
     let db = getDatabase()
     let [userlist,setUserlist] = useState([])
+    let [frequest,setfreqest] = useState([])
 
     useEffect(()=>{
         const usersRef = ref(db, 'users');
@@ -19,14 +20,31 @@ const UserList = () => {
             let arr = []
             snapshot.forEach(item=>{
                 if(data.userData.userInfo.uid != item.key){
-                    arr.push(item.val())
+                    arr.push({...item.val(), id:item.key})
                 }
             })
             setUserlist(arr)
         });
     },[])
-    console.log(userlist)
+    useEffect(()=>{
+        const usersRef = ref(db, 'friendrequest');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item=>{
+                arr.push(item.val().receiverid + item.val().senderid)
+            })
+            setfreqest(arr)
+        });
+    },[])
 
+    let hundleFriendRequest = (info) =>{
+        set(push(ref(db, 'friendrequest')), {
+            sendername: data.userData.userInfo.displayName,
+            senderid: data.userData.userInfo.uid,
+            receivername: info.displayName,
+            receiverid: info.id,
+          });
+    }
 
   return (
     <div className='box_main'>
@@ -46,7 +64,12 @@ const UserList = () => {
                     </div>
                     </Flex>
                     <div>
-                        <HomeCmnBtn className="homecmnbtn" title="Add"/>
+                        {frequest.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
+                        ?
+                        <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                        :
+                        <HomeCmnBtn onClick={()=> hundleFriendRequest(item)} className="homecmnbtn" title="Add"/>
+                        }
                     </div>
                 </Flex>            
             ))}

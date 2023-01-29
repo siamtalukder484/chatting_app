@@ -139,6 +139,7 @@ ul,ol{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
 }
 .auth_name h4{
     color: #fff;
@@ -198,12 +199,24 @@ ul,ol{
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: 50px;
+    row-gap: 10px;
 }
 .nav_icon{
-    font-size: 45px;
+    font-size: 30px;
     color: #fff;
     cursor: pointer;
+    width: 60px;
+    height: 60px;
+    padding: 15px;
+}
+.active .nav_icon{
+    color: red;
+    background-color: #fff;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
 }
 .pro_edit_preview{
     width: 70px ;

@@ -1,8 +1,8 @@
 import React from 'react'
 
-const HomeCmnBtn = ({title,className}) => {
+const HomeCmnBtn = ({title,className, onClick}) => {
   return (
-    <button className={className}>{title}</button>
+    <button className={className} onClick={onClick}>{title}</button>
   )
 }
 

@@ -4,6 +4,8 @@ import Register from './components/pages/Register';
 import Home from './components/pages/Home'
 import RootLayout from "./components/layouts/RootLayout";
 import Message from "./components/pages/Message";
+import Notification from "./components/pages/Notification";
+import Settings from "./components/pages/Settings";
 
 
 
@@ -15,6 +17,8 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path="/minder" element={<RootLayout/>}>
       <Route index element={<Home/>}></Route>
       <Route path="message" element={<Message/>}></Route>
+      <Route path="notification" element={<Notification/>}></Route>
+      <Route path="settings" element={<Settings/>}></Route>
     </Route>
   </Route>
 ))
