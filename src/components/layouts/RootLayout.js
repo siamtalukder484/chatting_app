@@ -169,8 +169,6 @@ const RootLayout = () => {
                       <div className='logout_btn'>
                           <AiOutlineLogout onClick={hundleLogout} className='nav_icon'/>
                       </div>
-                      
-                        
                     </div>
                 </div>
                 <Modal
@@ -218,7 +216,7 @@ const RootLayout = () => {
                           }}
                           guides={true}
                         />
-                        <button onClick={getCropData}>Upload</button>
+                        <button className='cropper_btn' onClick={getCropData}>Upload</button>
                         </>
                       }
                     </Typography>
