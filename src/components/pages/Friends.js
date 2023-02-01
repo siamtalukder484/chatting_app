@@ -8,8 +8,11 @@ import SubTitle from '../heading/SubTitle';
 import { getDatabase, ref, onValue,remove,set, push} from "firebase/database";
 import { useSelector } from 'react-redux';
 import Alert from '@mui/material/Alert';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const Friends = () => {
+
     let data = useSelector(state => state)
     const db = getDatabase();
     let [friends, setfriends] = useState([])
@@ -28,14 +31,34 @@ const Friends = () => {
     },[])
 
     let hundleBlock = (item) =>{
-        set(push(ref(db, 'block')), {
-           
-        })
+        data.userData.userInfo.uid == item.senderid 
+        ?
+            set(push(ref(db, 'block')), {
+                block: item.receivername,
+                blockid: item.receiverid,
+                blockby: item.sendername,
+                blockbyid: item.senderid,
+            }).then(()=>{
+                remove(ref(db, 'friends/'+ item.id)).then(()=>{
+                    toast("Block Done..");
+                });
+            })
+        :
+            set(push(ref(db, 'block')), {
+                block: item.sendername,
+                blockid: item.senderid,
+                blockby: item.receivername,
+                blockbyid: item.receiverid,
+            }).then(()=>{
+                remove(ref(db, 'friends/'+ item.id)).then(()=>{
+                    toast("Block Done..");
+                });
+            })
     }
-
 
   return (
     <div className='box_main'>
+        <ToastContainer />
         <Flex className='title_wrapper'>
             <BoxTitle title="Friends" className='box_title'/>
         </Flex>
@@ -57,7 +80,7 @@ const Friends = () => {
                     </div>
                     </Flex>
                     <div>
-                        <HomeCmnBtn onClick={hundleBlock} className="homecmnbtn" title="block"/>
+                        <HomeCmnBtn onClick={()=>hundleBlock(item)} className="homecmnbtn" title="block"/>
                     </div>
                 </Flex>
             )) : 
