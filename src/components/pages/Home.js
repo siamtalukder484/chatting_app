@@ -16,6 +16,7 @@ import Friends from './Friends';
 import MyGroup from './MyGroup';
 import UserList from './UserList';
 import BlockedUser from './BlockedUser';
+import ViewSentRequest from './ViewSentRequest';
 
 
 const Home = () => {
@@ -24,6 +25,7 @@ const Home = () => {
         <Grid item xs={4}>
             <GroupList/>
             <FriendRequest/>
+            <ViewSentRequest/>
         </Grid>
         <Grid item xs={3}>
             <Friends/>

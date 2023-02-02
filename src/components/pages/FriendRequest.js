@@ -24,6 +24,7 @@ const FriendRequest = () => {
                 if(item.val().receiverid == data.userData.userInfo.uid){
                     arr.push({...item.val(),id:item.key})
                 }
+                console.log(arr,"kfdskf");
             })
             setfreqest(arr)
         });

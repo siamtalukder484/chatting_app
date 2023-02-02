@@ -140,14 +140,28 @@ const RootLayout = () => {
                       <div>
                           <div className='pro_img_holder'>
                               <div className='pro_img_main'>
+                                {authname.userData.userInfo 
+                                ? 
+                                  authname.userData.userInfo.photoURL
+                                  ?
                                   <Images src={authname.userData.userInfo.photoURL} className='profile_img'/>
+                                  :
+                                  <Images src="assets/images/profile_avatar.png" className='profile_img'/>
+                                :
+                                <Images src="assets/images/profile_avatar.png" className='profile_img'/>
+                                }
                               </div>
                               <div onClick={handleOpen} className='profile_edit_btn'>
                                 <FiEdit2/>
                               </div>
                           </div>
                           <div className='auth_name'>
-                              <h4>{authname.userData.userInfo.displayName}</h4>
+                            {authname.userData.userInfo 
+                            ? 
+                            <h4>{authname.userData.userInfo.displayName}</h4>
+                            :
+                            ""
+                            }
                           </div>
                       </div>
                       <div>
@@ -179,23 +193,27 @@ const RootLayout = () => {
                 >
                   <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                      Choose Profile Photo
+                      <h3 style={{textAlign:"center",marginBottom:"10px"}}>Choose Profile Photo</h3>
                       <div className='pro_edit_preview'>
                             {image ? (
                               <div className='img-preview'></div>
                             ) : 
-                              authname.userData.userInfo.photoURL ? (
+                              authname.userData.userInfo ? (
+                                  authname.userData.userInfo.photoURL
+                                  ?
                                   <Images src={authname.userData.userInfo.photoURL} className='profile_img'/>
-                                ) : (
-                                  
+                                  :
                                   <Images src="assets/images/profile_avatar.png" className='profile_img'/>
+                                ) : (
+                                  <Images src="assets/images/profile_avatar.png" className='profile_img'/>
+                                  
                               )
                             }
                               
                         </div>
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      <input onChange={onChange} type='file'/>
+                      <input style={{textAlign:"center"}} onChange={onChange} type='file'/>
                       {image &&
                         <>
                         <Cropper

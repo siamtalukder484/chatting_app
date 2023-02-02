@@ -147,6 +147,7 @@ ul,ol{
     font-weight: 500;
     font-family: 'Poppins', sans-serif;
     margin-top: 8px;
+    text-align: center;
 }
 .pro_img_holder{
     position: relative;
@@ -227,8 +228,8 @@ ul,ol{
     -o-border-radius: 50%;
 }
 .pro_edit_preview{
-    width: 70px ;
-    height: 70px;
+    width: 80px ;
+    height: 80px;
     overflow: hidden;
     border-radius: 50%;
     -webkit-border-radius: 50%;
@@ -245,7 +246,7 @@ ul,ol{
 .img-preview{
     width: 100% !important;
     height: 100% !important;
-    background-color: red;
+    background-color: gray;
     object-fit: cover;
 }
 .img-preview img{
@@ -288,7 +289,9 @@ ul,ol{
 }
 .homecmnbtn_wrapper{
     display: flex;
-    column-gap: 5px;
+    gap: 5px;
+    flex-direction: column;
+
 }
 .homecmnbtn{
     color: #fff;

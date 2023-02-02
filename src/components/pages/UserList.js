@@ -5,8 +5,9 @@ import CmnButton from '../layouts/CmnButton';
 import HomeCmnBtn from '../layouts/HomeCmnBtn';
 import Images from "../layouts/Images"
 import SubTitle from '../heading/SubTitle';
-import { getDatabase, ref, onValue, set, push} from "firebase/database";
+import { getDatabase, ref, onValue, set, push,remove} from "firebase/database";
 import { useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
 
 const UserList = () => {
     let data = useSelector(state => state)
@@ -23,6 +24,7 @@ const UserList = () => {
                     arr.push({...item.val(), id:item.key})
                 }
             })
+            console.log(arr,"dfdsf")
             setUserlist(arr)
         });
     },[])
@@ -46,6 +48,13 @@ const UserList = () => {
           });
     }
 
+    let hundleCancelFriendRequest = (item) => {
+        console.log(item)
+        // remove(ref(db, 'friendrequest/'+ )).then(()=>{
+        //     console.log("remove hoice")
+        // });
+    }
+
   return (
     <div className='box_main'>
         <Flex className='title_wrapper'>
@@ -63,10 +72,13 @@ const UserList = () => {
                         <SubTitle className="group_subtitle" subtitle={item.email}/>
                     </div>
                     </Flex>
-                    <div>
+                    <div className='homecmnbtn_wrapper'>
                         {frequest.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
                         ?
-                        <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                        <>
+                            <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                            <HomeCmnBtn onClick={()=>hundleCancelFriendRequest(item)} className="homecmnbtn" title="Cancel"/>
+                        </>
                         :
                         <HomeCmnBtn onClick={()=> hundleFriendRequest(item)} className="homecmnbtn" title="Add"/>
                         }
