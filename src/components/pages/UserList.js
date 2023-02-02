@@ -64,13 +64,13 @@ const UserList = () => {
             {userlist.map(item=>(
                 <Flex className="grouplist">
                     <Flex className='group_details'>
-                    <div className='group_img_holder'>
-                        <Images src="assets/images/profile.png"/>
-                    </div>
-                    <div className='group_info'>
-                        <BoxTitle title={item.displayName} className='group_name'/>
-                        <SubTitle className="group_subtitle" subtitle={item.email}/>
-                    </div>
+                        <div className='group_img_holder'>
+                            <Images src="assets/images/profile.png"/>
+                        </div>
+                        <div className='group_info'>
+                            <BoxTitle title={item.displayName} className='group_name'/>
+                            <SubTitle className="group_subtitle" subtitle={item.email}/>
+                        </div>
                     </Flex>
                     <div className='homecmnbtn_wrapper'>
                         {frequest.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
