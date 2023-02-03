@@ -6,38 +6,71 @@ import HomeCmnBtn from '../layouts/HomeCmnBtn';
 import Images from "../layouts/Images"
 import SubTitle from '../heading/SubTitle';
 import { getDatabase, ref, onValue, set, push,remove} from "firebase/database";
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
+import { friendr } from '../../slices/userSlices';
 
 const UserList = () => {
     let data = useSelector(state => state)
     let db = getDatabase()
     let [userlist,setUserlist] = useState([])
     let [frequest,setfreqest] = useState([])
-
+    let [friends,setfriends] = useState([])
+    let [block,setBlock] = useState([])
+    let [load,setLoad] = useState(false)
+    let dispatch = useDispatch()
+    console.log(data.userData.friendrequest)
+    
     useEffect(()=>{
         const usersRef = ref(db, 'users');
         onValue(usersRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item=>{
                 if(data.userData.userInfo.uid != item.key){
-                    arr.push({...item.val(), id:item.key})
+                    arr.push({
+                        ...item.val(), 
+                        id:item.key,
+                    })
                 }
             })
-            console.log(arr,"dfdsf")
             setUserlist(arr)
+        });
+    },[])
+    useEffect(()=>{
+        const usersRef = ref(db, 'friends');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item=>{
+                arr.push(item.val().receiverid + item.val().senderid)  
+            })
+            setfriends(arr)
+        });
+    },[])
+
+    useEffect(()=>{
+        const usersRef = ref(db, 'block');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item=>{
+                arr.push(item.val().blockid + item.val().blockbyid)  
+            })
+            setBlock(arr)
         });
     },[])
     useEffect(()=>{
         const usersRef = ref(db, 'friendrequest');
         onValue(usersRef, (snapshot) => {
             let arr = []
+            let xyz = []
             snapshot.forEach(item=>{
                 arr.push(item.val().receiverid + item.val().senderid)
+                xyz.push({...item.val(),id: item.key})
             })
             setfreqest(arr)
+            localStorage.setItem("friendrequest",JSON.stringify(xyz))
+            // dispatch(friendr(xyz))
         });
-    },[])
+    },[load])
 
     let hundleFriendRequest = (info) =>{
         set(push(ref(db, 'friendrequest')), {
@@ -45,14 +78,32 @@ const UserList = () => {
             senderid: data.userData.userInfo.uid,
             receivername: info.displayName,
             receiverid: info.id,
-          });
+          }).then(()=>{
+            setLoad(!load)
+          })
+
     }
 
     let hundleCancelFriendRequest = (item) => {
-        console.log(item)
-        // remove(ref(db, 'friendrequest/'+ )).then(()=>{
-        //     console.log("remove hoice")
-        // });
+        // console.log(item);
+        data.userData.friendrequest.map(f=>{
+            if(item.id == f.receiverid || item.id == f.senderid) {
+                console.log(f.id)
+                remove(ref(db, 'friendrequest/'+ f.id)).then(()=>{
+                    localStorage.removeItem("friendrequest")
+                    const usersRef = ref(db, 'friendrequest');
+                    onValue(usersRef, (snapshot) => {
+                        let xyz = []
+                        snapshot.forEach(item=>{
+                            xyz.push({...item.val(),id: item.key})
+                        })
+                        // dispatch(friendr(xyz))
+                        localStorage.setItem("friendrequest",JSON.stringify(xyz))
+                    });
+                });
+            }   
+        })
+        
     }
 
   return (
@@ -73,15 +124,20 @@ const UserList = () => {
                         </div>
                     </Flex>
                     <div className='homecmnbtn_wrapper'>
-                        {frequest.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
+                        {friends.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
                         ?
-                        <>
-                            <HomeCmnBtn className="homecmnbtn" title="Pending"/>
-                            <HomeCmnBtn onClick={()=>hundleCancelFriendRequest(item)} className="homecmnbtn" title="Cancel"/>
-                        </>
+                        <HomeCmnBtn className="homecmnbtn" title="friend"/>
                         :
-                        <HomeCmnBtn onClick={()=> hundleFriendRequest(item)} className="homecmnbtn" title="Add"/>
-                        }
+                        frequest.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
+                        ?(
+                            <>
+                                <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                                <HomeCmnBtn onClick={()=>hundleCancelFriendRequest(item)} className="homecmnbtn" title="Cancel"/>
+                            </>
+                        )
+                        :(
+                            <HomeCmnBtn onClick={()=> hundleFriendRequest(item)} className="homecmnbtn" title="Add"/>
+                        )}
                     </div>
                 </Flex>            
             ))}

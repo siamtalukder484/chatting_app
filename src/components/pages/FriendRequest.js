@@ -24,7 +24,6 @@ const FriendRequest = () => {
                 if(item.val().receiverid == data.userData.userInfo.uid){
                     arr.push({...item.val(),id:item.key})
                 }
-                console.log(arr,"kfdskf");
             })
             setfreqest(arr)
         });
@@ -37,6 +36,7 @@ const FriendRequest = () => {
     };
 
     let hundleAcceptFriendRequest= (friendrequest) =>{
+        console.log(friendrequest);
         set(push(ref(db, 'friends')), {
             ...friendrequest,
             date:`${new Date().getDate()}-${new Date().getMonth()+1}-${new Date().getFullYear()}`
