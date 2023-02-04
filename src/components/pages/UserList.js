@@ -19,7 +19,6 @@ const UserList = () => {
     let [block,setBlock] = useState([])
     let [load,setLoad] = useState(false)
     let dispatch = useDispatch()
-    console.log(data.userData.friendrequest)
     
     useEffect(()=>{
         const usersRef = ref(db, 'users');
@@ -61,16 +60,12 @@ const UserList = () => {
         const usersRef = ref(db, 'friendrequest');
         onValue(usersRef, (snapshot) => {
             let arr = []
-            let xyz = []
             snapshot.forEach(item=>{
                 arr.push(item.val().receiverid + item.val().senderid)
-                xyz.push({...item.val(),id: item.key})
             })
             setfreqest(arr)
-            localStorage.setItem("friendrequest",JSON.stringify(xyz))
-            // dispatch(friendr(xyz))
         });
-    },[load])
+    },[])
 
     let hundleFriendRequest = (info) =>{
         set(push(ref(db, 'friendrequest')), {
@@ -85,25 +80,7 @@ const UserList = () => {
     }
 
     let hundleCancelFriendRequest = (item) => {
-        // console.log(item);
-        data.userData.friendrequest.map(f=>{
-            if(item.id == f.receiverid || item.id == f.senderid) {
-                console.log(f.id)
-                remove(ref(db, 'friendrequest/'+ f.id)).then(()=>{
-                    localStorage.removeItem("friendrequest")
-                    const usersRef = ref(db, 'friendrequest');
-                    onValue(usersRef, (snapshot) => {
-                        let xyz = []
-                        snapshot.forEach(item=>{
-                            xyz.push({...item.val(),id: item.key})
-                        })
-                        // dispatch(friendr(xyz))
-                        localStorage.setItem("friendrequest",JSON.stringify(xyz))
-                    });
-                });
-            }   
-        })
-        
+        console.log(item);  
     }
 
   return (

@@ -12,13 +12,16 @@ const GroupList = () => {
     const db = getDatabase();
     let data = useSelector((state) => state)
     let [allglist, setAllglist] = useState([])
+    console.log(data.userData.userInfo.uid)
 
     useEffect(()=>{
         const starCountRef = ref(db, 'groups');
         onValue(starCountRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item=>{
-                arr.push(item.val())
+                if(data.userData.userInfo.uid !== item.val().adminid){
+                    arr.push(item.val())
+                }
             })
             setAllglist(arr)
         });
