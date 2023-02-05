@@ -351,4 +351,34 @@ ul,ol{
     font-weight: 500;
     font-family: 'Poppins', sans-serif;
 }
+.admin_badge{
+    background-color: #5F35F5;
+    color: #fff;
+    padding: 2px 4px;
+    text-transform: capitalize;
+    margin-left: 5px;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+.group_popup_btn{
+    width: 30px;
+    height: 30px;
+    background-color: #5F35F5;
+    color: #fff;
+    border: 0;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
 /* =============== Home Part CSS End ================ */
