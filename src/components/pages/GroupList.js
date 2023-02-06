@@ -8,12 +8,14 @@ import SubTitle from '../heading/SubTitle';
 import { useDispatch,useSelector } from 'react-redux'
 import { getDatabase, ref, set, push, onValue} from "firebase/database";
 import Alert from '@mui/material/Alert';
+import { ToastContainer, toast } from 'react-toastify';
 
 const GroupList = () => {
     const db = getDatabase();
     let data = useSelector((state) => state)
     let [allglist, setAllglist] = useState([])
-    console.log(data.userData.userInfo.uid)
+    let [grouprequest,setGroupreqest] = useState([])
+    // console.log(data.userData.userInfo.uid)
 
     useEffect(()=>{
         const starCountRef = ref(db, 'groups');
@@ -28,8 +30,22 @@ const GroupList = () => {
         });
     },[])
 
+    useEffect(()=>{
+        const usersRef = ref(db, 'grouprequest');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item=>{
+                if(item.val().userid == data.userData.userInfo.uid){
+                    arr.push({...item.val(),grequestid:item.groupid})
+                }
+            })
+            setGroupreqest(arr)
+        });
+    },[])
+    console.log(grouprequest);
+
+
     let hundleGroupRequest = (item) => {
-        console.log(item)
         set(push(ref(db, 'grouprequest')), {
             groupid: item.groupid,
             groupname: item.groupname,
@@ -39,7 +55,7 @@ const GroupList = () => {
             adminid: item.adminid,
             adminname: item.adminname,
         }).then(()=>{
-            console.log("request gacea")
+            toast("Group join request Done..");
         });
     }
 
@@ -61,7 +77,12 @@ const GroupList = () => {
                     </div>
                     </Flex>
                     <div>
-                    <HomeCmnBtn onClick={()=>hundleGroupRequest(item)} className="homecmnbtn" title="join"/>
+                        {grouprequest.includes(item.id) 
+                        ? 
+                            <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                        :
+                            <HomeCmnBtn onClick={()=>hundleGroupRequest(item)} className="homecmnbtn" title="join"/>
+                        }
                     </div>
                 </Flex>
             ))

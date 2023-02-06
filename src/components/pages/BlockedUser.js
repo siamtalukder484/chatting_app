@@ -40,7 +40,6 @@ const BlockedUser = () => {
     },[])
 
     let hundleUnblock = (item) =>{
-        console.log(item.block);
         set(push(ref(db, 'friends')), {
             sendername: item.block,
             senderid: item.blockid,
