@@ -35,14 +35,15 @@ const GroupList = () => {
         onValue(usersRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item=>{
-                if(item.val().userid == data.userData.userInfo.uid){
-                    arr.push({...item.val(),grequestid:item.groupid})
+                if(item.val().userid == data.userData.userInfo.uid ){
+                    arr.push(item.val().userid + item.val().groupid)
                 }
             })
             setGroupreqest(arr)
         });
     },[])
     console.log(grouprequest);
+    console.log(data.userData.userInfo.uid);
 
 
     let hundleGroupRequest = (item) => {
@@ -77,7 +78,7 @@ const GroupList = () => {
                     </div>
                     </Flex>
                     <div>
-                        {grouprequest.includes(item.id) 
+                        {grouprequest.includes(data.userData.userInfo.uid + item.groupid ) 
                         ? 
                             <HomeCmnBtn className="homecmnbtn" title="Pending"/>
                         :
