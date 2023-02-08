@@ -15,6 +15,7 @@ const GroupList = () => {
     let data = useSelector((state) => state)
     let [allglist, setAllglist] = useState([])
     let [grouprequest,setGroupreqest] = useState([])
+    let [joinedgroup,setJoinedGroup] = useState([])
     // console.log(data.userData.userInfo.uid)
 
     useEffect(()=>{
@@ -42,8 +43,20 @@ const GroupList = () => {
             setGroupreqest(arr)
         });
     },[])
-    console.log(grouprequest);
-    console.log(data.userData.userInfo.uid);
+
+    useEffect(()=>{
+        const usersRef = ref(db, 'groupmembers');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item=>{
+                if(item.val().userid == data.userData.userInfo.uid){
+                    arr.push(item.val().userid + item.val().groupid)
+                }
+            })
+            setJoinedGroup(arr)
+        });
+    },[])
+    
 
 
     let hundleGroupRequest = (item) => {
@@ -78,11 +91,15 @@ const GroupList = () => {
                     </div>
                     </Flex>
                     <div>
-                        {grouprequest.includes(data.userData.userInfo.uid + item.groupid ) 
-                        ? 
-                            <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                        {joinedgroup.includes(data.userData.userInfo.uid + item.groupid) 
+                        ?
+                            <HomeCmnBtn className="homecmnbtn" title="Joined"/>
                         :
-                            <HomeCmnBtn onClick={()=>hundleGroupRequest(item)} className="homecmnbtn" title="join"/>
+                            grouprequest.includes(data.userData.userInfo.uid + item.groupid ) 
+                            ? 
+                                <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                            :
+                                <HomeCmnBtn onClick={()=>hundleGroupRequest(item)} className="homecmnbtn" title="join"/>
                         }
                     </div>
                 </Flex>

@@ -16,6 +16,10 @@ import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
+import { ToastContainer, toast } from 'react-toastify';
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 
 const MyGroup = () => {
@@ -35,7 +39,7 @@ const MyGroup = () => {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 500,
+        width: 600,
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
@@ -56,6 +60,7 @@ const MyGroup = () => {
     let [gtag, setGtag] = useState()
     let [glist, setGlist] = useState([])
     let [grlist, setGrlist] = useState([])
+    let [groupmember, setGroupMember] = useState([])
 
     const handleOpen2 = (id) => {
         setOpen2(true)
@@ -94,12 +99,73 @@ const MyGroup = () => {
             setGlist(arr)
         });
     },[])
+
+    useEffect(()=>{
+        const starCountRef = ref(db, 'groupmembers');
+        onValue(starCountRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item=>{
+                if(item.val().adminid == data.userData.userInfo.uid){
+                    console.log(item.val())
+               }
+            })
+            setGroupMember(arr)
+        });
+    },[])
     
     let hundleGroupReqDelete = (item) =>{
         remove(ref(db, 'grouprequest/'+ item.deleteid)).then(()=>{
-            console.log("greq delete");
+            toast("Member Delete Successfully..");
         });
     }
+    let hundleGroupReqAccept = (item) =>{
+        set(push(ref(db, 'groupmembers')), {
+            ...item,
+            date:`${new Date().getDate()}-${new Date().getMonth()+1}-${new Date().getFullYear()}`
+          }).then(()=>{
+            remove(ref(db, 'grouprequest/'+ item.deleteid)).then(()=>{
+                toast("Member Added Successfully..");
+            });
+          });
+    }
+
+
+    function TabPanel(props) {
+        const { children, value, index, ...other } = props;
+        return (
+          <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+          >
+            {value === index && (
+              <Box sx={{ p: 3 }}>
+                <Typography>{children}</Typography>
+              </Box>
+            )}
+          </div>
+        );
+      }
+        TabPanel.propTypes = {
+          children: PropTypes.node,
+          index: PropTypes.number.isRequired,
+          value: PropTypes.number.isRequired,
+        };
+        
+        function a11yProps(index) {
+          return {
+            id: `simple-tab-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`,
+          };
+        }
+        const handleChange = (event, newValue) => {
+          setValue(newValue);
+        };
+        const [value, setValue] = React.useState(0);
+      
+      
       
   return (
     <div className='box_main'>
@@ -158,43 +224,61 @@ const MyGroup = () => {
                 >
                 <Box sx={style2}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        <h4>Group Member Request</h4>
+                        <h4>Group Information</h4>
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                            {grlist.length > 0 ? grlist.map(item=>(
-                                <>  
-                                    <ListItem alignItems="center">
-                                        <ListItemAvatar>
-                                        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                        primary={item.username}
-                                        secondary={
-                                            <React.Fragment>
-                                            
-                                            {" — Wants to join your group"}
-                                            </React.Fragment>
-                                        }
-                                        />
-                                        <div style={{display:"flex",columnGap:"5px"}}>
-                                            <Button variant="outlined">
-                                                Accept
-                                            </Button>
-                                            <Button onClick={()=>hundleGroupReqDelete(item)} variant="outlined" color="error">
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    </ListItem>
-                                    <Divider variant="inset" component="li" />
-                                </>
-                            )) : 
-                                <Alert style={{marginTop:"0px",padding: "0 16px",fontWeight:"600"}} variant="filled" severity="error">
-                                    No Member Request available
-                                </Alert>
-                            }
+                        <Box sx={{ width: '100%' }}>
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                                    <Tab label="Pending Request" {...a11yProps(0)} />
+                                    <Tab label="Member" {...a11yProps(1)} />
+                                    <Tab label="Item Three" {...a11yProps(2)} />
+                                </Tabs>
+                            </Box>
+                            <TabPanel value={value} index={0}>
+                                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                    {grlist.length > 0 ? grlist.map(item=>(
+                                        <>  
+                                            <ListItem alignItems="center">
+                                                <ListItemAvatar>
+                                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                primary={item.username}
+                                                secondary={
+                                                    <React.Fragment>
+                                                    
+                                                    {" — Wants to join your group"}
+                                                    </React.Fragment>
+                                                }
+                                                />
+                                                <div style={{display:"flex",columnGap:"5px"}}>
+                                                    <Button onClick={()=>hundleGroupReqAccept(item)}  variant="outlined">
+                                                        Accept
+                                                    </Button>
+                                                    <Button onClick={()=>hundleGroupReqDelete(item)} variant="outlined" color="error">
+                                                        Delete
+                                                    </Button>
+                                                </div>
+                                            </ListItem>
+                                            <Divider variant="inset" component="li" />
+                                        </>
+                                    )) : 
+                                        <Alert style={{marginTop:"0px",padding: "0 16px",fontWeight:"600"}} variant="filled" severity="error">
+                                            No Member Request available
+                                        </Alert>
+                                    }
                             
-                        </List>
+                                </List>
+                            </TabPanel>
+                            <TabPanel value={value} index={1}>
+                                    
+                            </TabPanel>
+                            <TabPanel value={value} index={2}>
+                            Item Three
+                            </TabPanel>
+                        </Box>
+                        
                     </Typography>
                 </Box>
             </Modal>

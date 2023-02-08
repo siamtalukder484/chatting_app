@@ -275,6 +275,22 @@ ul,ol{
     margin-bottom: 25px;
     padding: 13px 20px;
     overflow-y: scroll;
+    overflow-x: scroll;
+}
+.box_main::-webkit-scrollbar{
+    width: 8px;
+}
+.box_main::-webkit-scrollbar-thumb{
+    width: 8px;
+    background-color: #5F35F5;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+.box_main::-webkit-scrollbar:horizontal{
+    height: 8px;
 }
 .box_title{
     color: #000;
@@ -380,5 +396,11 @@ ul,ol{
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+.css-heg063-MuiTabs-flexContainer{
+    justify-content: space-between;
+}
+.css-19kzrtu {
+    padding: 25px 0; 
 }
 /* =============== Home Part CSS End ================ */

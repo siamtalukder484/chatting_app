@@ -134,41 +134,35 @@ const UserList = () => {
                 </Flex>            
             ))
             :
-            
-                searchList.length > 0 
-                ? 
-                searchList.map(item=>(
-                    <Flex className="grouplist">
-                        <Flex className='group_details'>
-                            <div className='group_img_holder'>
-                                <Images src="assets/images/profile.png"/>
-                            </div>
-                            <div className='group_info'>
-                                <BoxTitle title={item.displayName} className='group_name'/>
-                                <SubTitle className="group_subtitle" subtitle={item.email}/>
-                            </div>
-                        </Flex>
-                        <div className='homecmnbtn_wrapper'>
-                            {friends.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
-                            ?
-                            <HomeCmnBtn className="homecmnbtn" title="friend"/>
-                            :
-                            frequest.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
-                            ?(
-                                <>
-                                    <HomeCmnBtn className="homecmnbtn" title="Pending"/>
-                                    <HomeCmnBtn onClick={()=>hundleCancelFriendRequest(item)} className="homecmnbtn" title="Cancel"/>
-                                </>
-                            )
-                            :(
-                                <HomeCmnBtn onClick={()=> hundleFriendRequest(item)} className="homecmnbtn" title="Add"/>
-                            )}
+            searchList.map(item=>(
+                <Flex className="grouplist">
+                    <Flex className='group_details'>
+                        <div className='group_img_holder'>
+                            <Images src="assets/images/profile.png"/>
                         </div>
-                    </Flex>            
-                ))
-                :
-                <h1>no result found</h1>
-            
+                        <div className='group_info'>
+                            <BoxTitle title={item.displayName} className='group_name'/>
+                            <SubTitle className="group_subtitle" subtitle={item.email}/>
+                        </div>
+                    </Flex>
+                    <div className='homecmnbtn_wrapper'>
+                        {friends.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
+                        ?
+                        <HomeCmnBtn className="homecmnbtn" title="friend"/>
+                        :
+                        frequest.includes(item.id + data.userData.userInfo.uid || data.userData.userInfo.uid + item.id)
+                        ?(
+                            <>
+                                <HomeCmnBtn className="homecmnbtn" title="Pending"/>
+                                <HomeCmnBtn onClick={()=>hundleCancelFriendRequest(item)} className="homecmnbtn" title="Cancel"/>
+                            </>
+                        )
+                        :(
+                            <HomeCmnBtn onClick={()=> hundleFriendRequest(item)} className="homecmnbtn" title="Add"/>
+                        )}
+                    </div>
+                </Flex>            
+            ))
             }
         </div>
     </div>
