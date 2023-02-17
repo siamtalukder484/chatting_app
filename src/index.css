@@ -4,6 +4,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+body{
+    font-family: 'Poppins', sans-serif;
+}
 a{
     text-decoration: none;
 }
@@ -404,3 +407,83 @@ ul,ol{
     padding: 25px 0; 
 }
 /* =============== Home Part CSS End ================ */
+
+/* =============== Message Part CSS End ================ */
+.chatting_box{
+    margin:10px 20px 0 0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 25%);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    /* height: 500px; */
+    padding: 40px 80px;
+    /* overflow-y: scroll; */
+}
+.chat_head{
+    display: flex;
+    border-bottom: 1px solid #000;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+.chat_head h2{
+    font-weight: 500;
+    font-size: 30px;
+}
+.chat_body{
+    width: 100%;
+    height: 400px;
+    overflow-y: scroll;
+}
+.chat_body::-webkit-scrollbar{
+    width: 0;
+
+}
+.send_msg{
+    text-align: right;
+    margin-left: 40px;
+}
+.send_msg p{
+    background-color: #5F35F5;
+    color: #fff;
+    display: inline-block;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    padding: 3px 10px;
+    margin-top: 15px;
+    text-align: justify;
+}
+.receive_msg{
+    margin-right: 40px;
+}
+.receive_msg p{
+    color: #000;
+    background-color: #eae6e6;
+    display: inline-block;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    padding: 3px 10px;
+    margin-top: 15px;
+    text-align: justify;
+}
+.chat_footer{
+    display: flex;
+    column-gap: 25px;
+    margin-top: 25px;
+}
+.chat_footer input{
+    width: 100%;
+    padding: 15px 30px;
+}
+.chat_footer button{
+    padding: 15px 30px;
+}

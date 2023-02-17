@@ -65,7 +65,7 @@ const Login = () => {
       let auth = getAuth();
       const provider = new GoogleAuthProvider();
       let navigate = useNavigate();
-      let dispatch = useDispatch()
+      let dispatch = useDispatch();
       
       const [open, setOpen] = React.useState(false);
       const handleOpen = () => setOpen(true);
@@ -117,7 +117,6 @@ const Login = () => {
               }else{
                 toast("Please verify your email first.");
               }
-            // const user = userCredential.user;
             
           })
           .catch((error) => {

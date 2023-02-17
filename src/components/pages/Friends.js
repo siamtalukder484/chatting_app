@@ -67,7 +67,7 @@ const Friends = () => {
                 <Flex className="grouplist">
                     <Flex className='group_details'>
                     <div className='group_img_holder'>
-                        <Images src='assets/images/profile.png'/>
+                        <Images src='./assets/images/profile.png'/>
                     </div>
                     <div className='group_info'>
                         {data.userData.userInfo.uid == item.senderid 

@@ -62,19 +62,32 @@ const MyGroup = () => {
     let [grlist, setGrlist] = useState([])
     let [groupmember, setGroupMember] = useState([])
 
-    const handleOpen2 = (id) => {
+    const handleOpen2 = (item) => {
         setOpen2(true)
+        console.log(item.gid)
         const starCountRef = ref(db, 'grouprequest');
         onValue(starCountRef, (snapshot) => {
             let arr = []
-            snapshot.forEach(item=>{
-                if(item.val().groupid == id){
-                    arr.push({...item.val(),deleteid:item.key})  
+            snapshot.forEach(grdata=>{
+                if(grdata.val().groupid == item.gid){
+                    arr.push({...grdata.val(),deleteid:grdata.key})  
                 }
             })
             setGrlist(arr)
         });
+        const starCountRef2 = ref(db, 'groupmembers');
+        onValue(starCountRef2, (snapshot) => {
+            let arr = []
+            snapshot.forEach(items=>{
+                if(items.val().adminid == data.userData.userInfo.uid && items.val().groupid == item.gid){
+                    arr.push({...items.val(),gmemberid:item.key})
+               }
+            })
+            setGroupMember(arr)
+        });
     };
+
+
 
     let hundleCreateGroup = () => {
         set(push(ref(db, 'groups')), {
@@ -100,18 +113,7 @@ const MyGroup = () => {
         });
     },[])
 
-    useEffect(()=>{
-        const starCountRef = ref(db, 'groupmembers');
-        onValue(starCountRef, (snapshot) => {
-            let arr = []
-            snapshot.forEach(item=>{
-                if(item.val().adminid == data.userData.userInfo.uid){
-                    console.log(item.val())
-               }
-            })
-            setGroupMember(arr)
-        });
-    },[])
+  
     
     let hundleGroupReqDelete = (item) =>{
         remove(ref(db, 'grouprequest/'+ item.deleteid)).then(()=>{
@@ -189,7 +191,7 @@ const MyGroup = () => {
                 </div>
                 </Flex>
                 <div>
-                    <button onClick={()=>handleOpen2(item.gid)} className='group_popup_btn'>    
+                    <button onClick={()=>handleOpen2(item)} className='group_popup_btn'>    
                         <BsThreeDotsVertical/>
                     </button>
                 </div>
@@ -265,20 +267,49 @@ const MyGroup = () => {
                                         </>
                                     )) : 
                                         <Alert style={{marginTop:"0px",padding: "0 16px",fontWeight:"600"}} variant="filled" severity="error">
-                                            No Member Request available
+                                            No Pending Request available
                                         </Alert>
                                     }
                             
                                 </List>
                             </TabPanel>
                             <TabPanel value={value} index={1}>
-                                    
+                                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                                    {groupmember.length > 0 ? groupmember.map(item=>(
+                                        <>  
+                                            <ListItem alignItems="center">
+                                                <ListItemAvatar>
+                                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                primary={item.username}
+                                                secondary={
+                                                    <React.Fragment>
+                                                    
+                                                    {item.date}
+                                                    </React.Fragment>
+                                                }
+                                                />
+                                                <div style={{display:"flex",columnGap:"5px"}}>
+                                                    <Button variant="outlined" color="error">
+                                                        Remove
+                                                    </Button>
+                                                </div>
+                                            </ListItem>
+                                            <Divider variant="inset" component="li" />
+                                        </>
+                                    )) : 
+                                        <Alert style={{marginTop:"0px",padding: "0 16px",fontWeight:"600"}} variant="filled" severity="error">
+                                            No Member available
+                                        </Alert>
+                                    }
+                            
+                                </List>
                             </TabPanel>
                             <TabPanel value={value} index={2}>
                             Item Three
                             </TabPanel>
                         </Box>
-                        
                     </Typography>
                 </Box>
             </Modal>

@@ -157,7 +157,6 @@ const Register = () => {
       createUserWithEmailAndPassword(auth,formData.email,formData.password).then((user)=>{
         sendEmailVerification(auth.currentUser)
           .then(() =>{
-            
             updateProfile(auth.currentUser, {
               displayName: formData.full_name,
             }).then(() => {
