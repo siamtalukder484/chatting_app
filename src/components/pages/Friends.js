@@ -6,15 +6,17 @@ import HomeCmnBtn from '../layouts/HomeCmnBtn';
 import Images from "../layouts/Images"
 import SubTitle from '../heading/SubTitle';
 import { getDatabase, ref, onValue,remove,set, push} from "firebase/database";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Alert from '@mui/material/Alert';
 import { ToastContainer, toast } from 'react-toastify';
+import { activeChatUser } from '../../slices/activeChatSlices';
 
 
 const Friends = () => {
 
     let data = useSelector(state => state)
     const db = getDatabase();
+    let dispatch = useDispatch();
     let [friends, setfriends] = useState([])
 
     useEffect(()=>{
@@ -55,6 +57,10 @@ const Friends = () => {
                 });
             })
     }
+    let handleActiveChat = (item) =>{
+        console.log(item);
+        dispatch(activeChatUser(item))
+    }
 
   return (
     <div className='box_main'>
@@ -64,7 +70,7 @@ const Friends = () => {
         </Flex>
         <div className='group_wrapper'>
             {friends.length > 0 ? friends.map((item) => (
-                <Flex className="grouplist">
+                <Flex onClick={()=>handleActiveChat(item)}  className="grouplist">
                     <Flex className='group_details'>
                     <div className='group_img_holder'>
                         <Images src='./assets/images/profile.png'/>

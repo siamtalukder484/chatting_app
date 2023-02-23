@@ -20,26 +20,28 @@ const JoinedGroup = () => {
         const starCountRef = ref(db, 'groupmembers');
         onValue(starCountRef, (snapshot) => {
             let arr = []
-            snapshot.forEach(item=>{
-                
+            snapshot.forEach(item=>{  
                 arr.push(item.val().groupid+item.val().userid)  
             })
-            console.log(arr)
             setGmlist(arr)
-        });
+        }); 
     },[])
+
     useEffect(()=>{
         const starCountRef = ref(db, 'groups');
-        onValue(starCountRef, (snapshot) => {
+            onValue(starCountRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item=>{
                 if(data.userData.userInfo.uid == item.val().adminid){
                     arr.push({...item.val(),gid:item.key})
+                }else if(gmlist.includes(item.key+data.userData.userInfo.uid)){
+                    arr.push({...item.val(),gid:item.key})
+                    
                 }
             })
             setGlist(arr)
-        });
-    },[])
+            });
+    },[gmlist.length])
 
   return (
     <div className='box_main'>
