@@ -9,7 +9,6 @@ import { getDatabase, ref, onValue,remove,set, push} from "firebase/database";
 import { useSelector, useDispatch } from 'react-redux';
 import Alert from '@mui/material/Alert';
 import { ToastContainer, toast } from 'react-toastify';
-import { activeChatUser } from '../../slices/activeChatSlices';
 
 
 const Friends = () => {
@@ -18,6 +17,7 @@ const Friends = () => {
     const db = getDatabase();
     let dispatch = useDispatch();
     let [friends, setfriends] = useState([])
+    console.log(data.userData.userInfo.uid);
 
     useEffect(()=>{
         const starCountRef = ref(db, 'friends');
@@ -59,7 +59,7 @@ const Friends = () => {
     }
     let handleActiveChat = (item) =>{
         console.log(item);
-        dispatch(activeChatUser(item))
+        
     }
 
   return (
