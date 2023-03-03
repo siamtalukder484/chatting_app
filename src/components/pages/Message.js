@@ -12,6 +12,8 @@ import { getDatabase, ref, onValue,remove,set, push} from "firebase/database";
 import { useSelector, useDispatch } from 'react-redux';
 import Alert from '@mui/material/Alert';
 import { ToastContainer, toast } from 'react-toastify';
+import moment from 'moment/moment';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 
 const Message = () => {
@@ -193,23 +195,29 @@ const Message = () => {
                     <BsThreeDotsVertical/>
                   </Flex>
                 </Flex>
-                <Flex className="chat_body">
-                  {console.log(msgList)}
+                <ScrollToBottom  className="chat_body">
+                
                   {msgList.map((item) => (
                     item.whosendid == data.userData.userInfo.uid
                     ?
                     <div className='send_msg'>
                       <p>{item.message}</p>
+                      <span>
+                        {moment(item.date, "YYYYMMDD hh:mm").fromNow()}
+                      </span>
                     </div> 
                     :
                     <div className='receive_msg'>
                       <p>{item.message}</p>
+                      <span>
+                        {moment(item.date, "YYYYMMDD hh:mm").fromNow()}
+                      </span>
                     </div> 
                   ))}
                   
                   
                   
-                </Flex>
+                </ScrollToBottom >
                 <Flex className="chat_footer">
                     <input onKeyUp={handleKeyPress} onChange={(e)=>setMsg(e.target.value)} name='chat_msg_input' placeholder='Message'/>
                     <button onClick={handleSendMsg}>Send</button>
