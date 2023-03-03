@@ -38,7 +38,6 @@ const Message = () => {
   let handleActiveChat = (item) =>{
     setActiveChat({...item, msgstatus: "singlemsg"});  
   }
-  console.log("x",activeChat)
   let hundleBlock = (item) =>{
     data.userData.userInfo.uid == item.senderid 
     ?
@@ -85,7 +84,7 @@ const Message = () => {
           date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
         }).then(()=>{
           //msg box faka korte hobea
-          setMsg("")
+          msg("")
         })
       }
     }
@@ -103,6 +102,33 @@ const Message = () => {
           setMsgList(arr)
       });
   },[activeChat])
+  let handleKeyPress = (e) => {
+    if(e.key == "Enter"){
+      if(activeChat.msgstatus == "singlemsg"){
+        set(push(ref(db, 'onebyonemsg')), {
+          whosendid: data.userData.userInfo.uid,
+          whosendname: data.userData.userInfo.displayName,
+          whoreceivedid: data.userData.userInfo.uid == activeChat.senderid 
+            ?
+            activeChat.receiverid 
+            :
+            activeChat.senderid
+          ,
+          whoreceivedname: data.userData.userInfo.uid == activeChat.senderid 
+            ?
+            activeChat.receivername 
+            :
+            activeChat.sendername
+          , 
+          message: msg,
+          date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
+        }).then(()=>{
+          //msg box faka korte hobea
+          msg("")
+        })
+      }
+    }
+  }
   return (
     <>
         <Grid item xs={4}>
@@ -146,6 +172,8 @@ const Message = () => {
             </div>
         </Grid>
         <Grid item xs={6}>
+          {activeChat.receivername
+          ?
             <Flex className="chatting_box">
                 <Flex className="chat_head">
                   <Flex className="chat_head_img">
@@ -166,38 +194,34 @@ const Message = () => {
                   </Flex>
                 </Flex>
                 <Flex className="chat_body">
+                  {console.log(msgList)}
                   {msgList.map((item) => (
+                    item.whosendid == data.userData.userInfo.uid
+                    ?
                     <div className='send_msg'>
                       <p>{item.message}</p>
                     </div> 
+                    :
+                    <div className='receive_msg'>
+                      <p>{item.message}</p>
+                    </div> 
                   ))}
-                  {/* <div className='receive_msg'>
-                    <p>hello hello hello</p>
-                  </div> 
-                  <div className='send_msg'>
-                    <p>hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello</p>
-                  </div>
-                  <div className='receive_msg'>
-                    <p>hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello</p>
-                  </div> 
-                  <div className='send_msg'>
-                    <p>hello hello hello</p>
-                  </div> 
-                  <div className='receive_msg'>
-                    <p>hello hello hello</p>
-                  </div> 
-                  <div className='send_msg'>
-                    <p>how are you?</p>
-                  </div> 
-                  <div className='send_msg'>
-                    <p>how are you?</p>
-                  </div>  */}
+                  
+                  
+                  
                 </Flex>
                 <Flex className="chat_footer">
-                    <input onChange={(e)=>setMsg(e.target.value)} name='chat_msg_input' placeholder='Message'/>
+                    <input onKeyUp={handleKeyPress} onChange={(e)=>setMsg(e.target.value)} name='chat_msg_input' placeholder='Message'/>
                     <button onClick={handleSendMsg}>Send</button>
                 </Flex>
             </Flex>
+          :
+          <div className='empty_box'>
+            <div className='empty_chat'>
+              <h1>Please Select a Feiend or Group and start chatting..</h1>
+            </div>
+          </div>
+          }
         </Grid>
     </>
   )
