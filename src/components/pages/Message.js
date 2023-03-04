@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Friends from "./Friends"
 import Images from '../layouts/Images';
 import Flex from '../layouts/Flex';
-import {BsThreeDotsVertical} from "react-icons/bs";
+import {BsThreeDotsVertical,BsCameraFill} from "react-icons/bs";
 import JoinedGroup from './JoinedGroup';
 import HomeCmnBtn from '../layouts/HomeCmnBtn';
 import BoxTitle from '../heading/BoxTitle';
@@ -14,6 +14,24 @@ import Alert from '@mui/material/Alert';
 import { ToastContainer, toast } from 'react-toastify';
 import moment from 'moment/moment';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { style } from '@mui/system';
+// import BsCameraFill from 'react-icons/bs'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+const style2 = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 
 const Message = () => {
@@ -23,6 +41,10 @@ const Message = () => {
   let [activeChat, setActiveChat] = useState([])
   let [msg, setMsg] = useState([])
   let [msgList, setMsgList] = useState([])
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
 
   useEffect(()=>{
@@ -37,6 +59,7 @@ const Message = () => {
         setfriends(arr)
     });
 },[])
+console.log(msg.length)
   let handleActiveChat = (item) =>{
     setActiveChat({...item, msgstatus: "singlemsg"});  
   }
@@ -65,29 +88,31 @@ const Message = () => {
             });
         })
     }
+  
     let handleSendMsg = () => {
-      if(activeChat.msgstatus == "singlemsg"){
-        set(push(ref(db, 'onebyonemsg')), {
-          whosendid: data.userData.userInfo.uid,
-          whosendname: data.userData.userInfo.displayName,
-          whoreceivedid: data.userData.userInfo.uid == activeChat.senderid 
-            ?
-            activeChat.receiverid 
-            :
-            activeChat.senderid
-          ,
-          whoreceivedname: data.userData.userInfo.uid == activeChat.senderid 
-            ?
-            activeChat.receivername 
-            :
-            activeChat.sendername
-          , 
-          message: msg,
-          date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
-        }).then(()=>{
-          //msg box faka korte hobea
-          msg("")
-        })
+      if(msg.length > 0){
+        if(activeChat.msgstatus == "singlemsg"){
+          set(push(ref(db, 'onebyonemsg')), {
+            whosendid: data.userData.userInfo.uid,
+            whosendname: data.userData.userInfo.displayName,
+            whoreceivedid: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receiverid 
+              :
+              activeChat.senderid
+            ,
+            whoreceivedname: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receivername 
+              :
+              activeChat.sendername
+            , 
+            message: msg,
+            date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
+          }).then(()=>{
+            msg("")
+          })
+        }
       }
     }
     useEffect(()=>{
@@ -106,30 +131,38 @@ const Message = () => {
   },[activeChat])
   let handleKeyPress = (e) => {
     if(e.key == "Enter"){
-      if(activeChat.msgstatus == "singlemsg"){
-        set(push(ref(db, 'onebyonemsg')), {
-          whosendid: data.userData.userInfo.uid,
-          whosendname: data.userData.userInfo.displayName,
-          whoreceivedid: data.userData.userInfo.uid == activeChat.senderid 
-            ?
-            activeChat.receiverid 
-            :
-            activeChat.senderid
-          ,
-          whoreceivedname: data.userData.userInfo.uid == activeChat.senderid 
-            ?
-            activeChat.receivername 
-            :
-            activeChat.sendername
-          , 
-          message: msg,
-          date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
-        }).then(()=>{
-          //msg box faka korte hobea
-          setMsg("")
-        })
+      if(msg.length > 0){
+        if(activeChat.msgstatus == "singlemsg"){
+          set(push(ref(db, 'onebyonemsg')), {
+            whosendid: data.userData.userInfo.uid,
+            whosendname: data.userData.userInfo.displayName,
+            whoreceivedid: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receiverid 
+              :
+              activeChat.senderid
+            ,
+            whoreceivedname: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receivername 
+              :
+              activeChat.sendername
+            , 
+            message: msg,
+            date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
+          }).then(()=>{
+            //msg box faka korte hobea
+            setMsg("")
+          })
+        }
       }
     }
+  }
+  let handleChatImgExit = () => {
+    setOpen(false)
+  }
+  let handleChatImg = (e) =>{
+    console.log(e.target.files[0])
   }
   return (
     <>
@@ -216,8 +249,30 @@ const Message = () => {
                   ))} 
                 </ScrollToBottom >
                 <Flex className="chat_footer">
+                  <div className='chat_input_box'>
                     <input onKeyUp={handleKeyPress} onChange={(e)=>setMsg(e.target.value)} value={msg} name='chat_msg_input' placeholder='Message'/>
+                    <BsCameraFill onClick={handleOpen} className='camera_icon'/>
+                  </div>
                     <button onClick={handleSendMsg}>Send</button>
+                    <Modal
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style2}>
+                        <div className='img_modal'>
+                          <div>
+                            <h3>Choose Image</h3>
+                            <input onChange={handleChatImg} type="file"/>
+                          </div>
+                          <div className='img_modal_btn'>
+                            <button>Sent</button>
+                            <button onClick={handleChatImgExit}>Cancel</button>
+                          </div>
+                        </div>
+                      </Box>
+                    </Modal>
                 </Flex>
             </Flex>
           :
