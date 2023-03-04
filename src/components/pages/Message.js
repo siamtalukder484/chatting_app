@@ -126,7 +126,7 @@ const Message = () => {
           date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
         }).then(()=>{
           //msg box faka korte hobea
-          msg("")
+          setMsg("")
         })
       }
     }
@@ -213,13 +213,10 @@ const Message = () => {
                         {moment(item.date, "YYYYMMDD hh:mm").fromNow()}
                       </span>
                     </div> 
-                  ))}
-                  
-                  
-                  
+                  ))} 
                 </ScrollToBottom >
                 <Flex className="chat_footer">
-                    <input onKeyUp={handleKeyPress} onChange={(e)=>setMsg(e.target.value)} name='chat_msg_input' placeholder='Message'/>
+                    <input onKeyUp={handleKeyPress} onChange={(e)=>setMsg(e.target.value)} value={msg} name='chat_msg_input' placeholder='Message'/>
                     <button onClick={handleSendMsg}>Send</button>
                 </Flex>
             </Flex>
