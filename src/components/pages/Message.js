@@ -20,6 +20,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { getStorage, ref as sref, uploadBytes,getDownloadURL,uploadString  } from "firebase/storage";
+import Camera from 'react-html5-camera-photo';
+import 'react-html5-camera-photo/build/css/index.css';
 
 const style2 = {
   position: 'absolute',
@@ -37,10 +40,12 @@ const style2 = {
 const Message = () => {
   let data = useSelector(state => state)
   const db = getDatabase();
+  const storage = getStorage();
   let [friends, setfriends] = useState([])
   let [activeChat, setActiveChat] = useState([])
   let [msg, setMsg] = useState([])
   let [msgList, setMsgList] = useState([])
+  let [isCamera, setisCamera] = useState(false)
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -59,7 +64,6 @@ const Message = () => {
         setfriends(arr)
     });
 },[])
-console.log(msg.length)
   let handleActiveChat = (item) =>{
     setActiveChat({...item, msgstatus: "singlemsg"});  
   }
@@ -163,6 +167,74 @@ console.log(msg.length)
   }
   let handleChatImg = (e) =>{
     console.log(e.target.files[0])
+    const storageRef = sref(storage, "singlechatimg/"+e.target.files[0].name);
+    uploadBytes(storageRef, e.target.files[0]).then((snapshot) => {
+      getDownloadURL(storageRef).then((downloadURL) => {
+        console.log("file available at", downloadURL);
+        if(activeChat.msgstatus == "singlemsg"){
+          set(push(ref(db, 'onebyonemsg')), {
+            whosendid: data.userData.userInfo.uid,
+            whosendname: data.userData.userInfo.displayName,
+            whoreceivedid: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receiverid 
+              :
+              activeChat.senderid
+            ,
+            whoreceivedname: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receivername 
+              :
+              activeChat.sendername
+            , 
+            onebyoneimg: downloadURL,
+            date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
+          }).then(()=>{
+            setMsg("")
+          })
+        }
+      }).then(()=>{
+        toast("Image Sent Successfully..");
+        setOpen(false)
+      })
+    });
+  }
+  function handleTakePhoto (dataUri) {
+    console.log(dataUri);
+    const storageRef = sref(storage, 'singlechatimg/'+ Date.now());
+    const message4 = dataUri;
+    uploadString(storageRef, message4, 'data_url').then((snapshot) => {
+      console.log('Uploaded a data_url string!');
+      getDownloadURL(storageRef).then((downloadURL) => {
+        console.log("file available at", downloadURL);
+        if(activeChat.msgstatus == "singlemsg"){
+          set(push(ref(db, 'onebyonemsg')), {
+            whosendid: data.userData.userInfo.uid,
+            whosendname: data.userData.userInfo.displayName,
+            whoreceivedid: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receiverid 
+              :
+              activeChat.senderid
+            ,
+            whoreceivedname: data.userData.userInfo.uid == activeChat.senderid 
+              ?
+              activeChat.receivername 
+              :
+              activeChat.sendername
+            , 
+            onebyoneimg: downloadURL,
+            date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
+          }).then(()=>{
+            setisCamera(false)
+          })
+        }
+      })
+    });
+  }
+  let handleCameraClick = () => {
+    setOpen(false)
+    setisCamera(true)
   }
   return (
     <>
@@ -229,19 +301,32 @@ console.log(msg.length)
                   </Flex>
                 </Flex>
                 <ScrollToBottom  className="chat_body">
-                
                   {msgList.map((item) => (
                     item.whosendid == data.userData.userInfo.uid
                     ?
                     <div className='send_msg'>
+                      {item.message
+                      ?
                       <p>{item.message}</p>
+                      :
+                      <div className='chat_img_box'>
+                        <img src={item.onebyoneimg} alt="img"/>
+                      </div>
+                      }
                       <span>
                         {moment(item.date, "YYYYMMDD hh:mm").fromNow()}
                       </span>
                     </div> 
                     :
                     <div className='receive_msg'>
+                      {item.message
+                      ?
                       <p>{item.message}</p>
+                      :
+                      <div className='chat_img_box'>
+                        <img src={item.onebyoneimg} alt="img"/>
+                      </div>
+                      }
                       <span>
                         {moment(item.date, "YYYYMMDD hh:mm").fromNow()}
                       </span>
@@ -264,7 +349,11 @@ console.log(msg.length)
                         <div className='img_modal'>
                           <div>
                             <h3>Choose Image</h3>
+                          </div>
+                          <div className='file_box'>
                             <input onChange={handleChatImg} type="file"/>
+                            
+                            <button onClick={handleCameraClick}>Camera</button>
                           </div>
                           <div className='img_modal_btn'>
                             <button>Sent</button>
@@ -275,6 +364,7 @@ console.log(msg.length)
                     </Modal>
                 </Flex>
             </Flex>
+                       
           :
           <div className='empty_box'>
             <div className='empty_chat'>
@@ -282,7 +372,24 @@ console.log(msg.length)
             </div>
           </div>
           }
+          {isCamera &&
+            <div className='camera_main' style={{position:"absolute",left:0,top:0,}}>
+              <button onClick={()=>setisCamera(false)} className='close_btn'>Close</button>
+              <Camera
+                onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
+                idealResolution = {{width: "90%", height: "100%"}}
+                imageCompression = {0.97}
+                isMaxResolution = {true}
+                isImageMirror = {false}
+                isSilentMode = {false}
+                isDisplayStartCameraError = {false}
+                isFullscreen = {true}
+                sizeFactor = {1}
+              />
+            </div>
+          }
         </Grid>
+        
     </>
   )
 }

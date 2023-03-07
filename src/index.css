@@ -480,6 +480,24 @@ ul,ol{
     text-align: justify;
     font-size: 18px;
 }
+.send_msg .chat_img_box{
+    width: 450px;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    margin-left: auto;
+    margin-top: 15px;
+    box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 25%);
+}
+.send_msg .chat_img_box img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 .receive_msg{
     margin-right: 40px;
 }
@@ -489,6 +507,25 @@ ul,ol{
     color: #a39f9f;
     margin-top: 3px;
 }
+.receive_msg .chat_img_box{
+    width: 450px;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    margin-right: auto;
+    margin-top: 15px;
+    box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 25%);
+}
+.receive_msg .chat_img_box img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .receive_msg p{
     color: #000;
     background-color: #eae6e6;
@@ -503,6 +540,7 @@ ul,ol{
     text-align: justify;
     font-size: 18px;
 }
+
 .chat_footer{
     display: flex;
     column-gap: 25px;
@@ -574,4 +612,25 @@ ul,ol{
     font-weight: 500;
     border: 0;
     cursor: pointer;
+}
+.file_box{
+    display: flex;
+    justify-content: space-around;
+}
+.camera_main video{
+    /* width: 100% !important; */
+    height: 90vh !important;
+    box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 25%);
+}
+.camera_main .close_btn{
+    background-color: #5F35F5;
+    color: #fff;
+    padding: 8px 15px;
+    border: 0;
+    position: absolute;
+    right: 50px;
+    top: 50px;
+    z-index: 55555;
+    font-size: 18px;
+    font-weight: 500;
 }
