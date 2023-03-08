@@ -579,6 +579,38 @@ ul,ol{
 .camera_icon:hover{
     color: #5F35F5;
 }
+.audio-recorder{
+    position: absolute;
+    right: 30px;
+    font-size: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    cursor: pointer;
+    transition: all linear 0.3s;
+    -webkit-transition: all linear 0.3s;
+    -moz-transition: all linear 0.3s;
+    -ms-transition: all linear 0.3s;
+    -o-transition: all linear 0.3s;
+    background-color: transparent !important;
+    box-shadow: none !important;
+
+}
+.audio-recorder:hover{
+    color: #5F35F5 !important;
+}
+.audio-recorder.recording{
+    background-color: #5F35F5 !important;
+    color: #fff !important;
+}
+.audio-recorder-mic {
+    cursor: pointer;
+    height: 20px;
+    color: #fff;
+}
 .empty_box{
     margin:10px 20px 0 0;
     border-radius: 8px;
@@ -633,4 +665,8 @@ ul,ol{
     z-index: 55555;
     font-size: 18px;
     font-weight: 500;
+}
+.emoji_box{
+    position: absolute;
+    right: 50px;
 }

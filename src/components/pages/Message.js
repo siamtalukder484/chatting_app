@@ -15,7 +15,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import moment from 'moment/moment';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { style } from '@mui/system';
-// import BsCameraFill from 'react-icons/bs'
+import EmojiPicker from 'emoji-picker-react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -23,6 +23,7 @@ import Modal from '@mui/material/Modal';
 import { getStorage, ref as sref, uploadBytes,getDownloadURL,uploadString  } from "firebase/storage";
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
+import { AudioRecorder } from 'react-audio-voice-recorder';
 
 const style2 = {
   position: 'absolute',
@@ -34,6 +35,15 @@ const style2 = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+};
+
+const addAudioElement = (blob) => {
+  const url = URL.createObjectURL(blob);
+  const audio = document.createElement("audio");
+  audio.src = url;
+  audio.controls = true;
+  document.body.appendChild(audio);
+  console.log(blob)
 };
 
 
@@ -114,7 +124,7 @@ const Message = () => {
             message: msg,
             date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getMilliseconds()}`,
           }).then(()=>{
-            msg("")
+            setMsg("")
           })
         }
       }
@@ -236,6 +246,9 @@ const Message = () => {
     setOpen(false)
     setisCamera(true)
   }
+  let handleEmoji = (e) => {
+    setMsg(msg+e.emoji)
+  } 
   return (
     <>
         <Grid item xs={4}>
@@ -337,6 +350,10 @@ const Message = () => {
                   <div className='chat_input_box'>
                     <input onKeyUp={handleKeyPress} onChange={(e)=>setMsg(e.target.value)} value={msg} name='chat_msg_input' placeholder='Message'/>
                     <BsCameraFill onClick={handleOpen} className='camera_icon'/>
+                    <AudioRecorder className="voice_icon" onRecordingComplete={addAudioElement} />
+                    <div className='emoji_box'>
+                      <EmojiPicker onEmojiClick={(e)=>handleEmoji(e)}/>
+                    </div>
                   </div>
                     <button onClick={handleSendMsg}>Send</button>
                     <Modal
@@ -354,6 +371,7 @@ const Message = () => {
                             <input onChange={handleChatImg} type="file"/>
                             
                             <button onClick={handleCameraClick}>Camera</button>
+                            
                           </div>
                           <div className='img_modal_btn'>
                             <button>Sent</button>
