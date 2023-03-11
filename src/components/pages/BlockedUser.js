@@ -64,7 +64,7 @@ const BlockedUser = () => {
   return (
     <div className="box_main">
       <Flex className="title_wrapper">
-        <BoxTitle title="Blocked User jj" className="box_title" />
+        <BoxTitle title="Blocked User" className="box_title" />
       </Flex>
       <div className="group_wrapper">
         {blocklist.length > 0 ? (
