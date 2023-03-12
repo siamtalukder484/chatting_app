@@ -24,6 +24,7 @@ import { getStorage, ref as sref, uploadBytes,getDownloadURL,uploadString  } fro
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import { AudioRecorder } from 'react-audio-voice-recorder';
+import {BsEmojiSmileFill} from "react-icons/bs"
 
 const style2 = {
   position: 'absolute',
@@ -56,6 +57,7 @@ const Message = () => {
   let [msg, setMsg] = useState([])
   let [msgList, setMsgList] = useState([])
   let [isCamera, setisCamera] = useState(false)
+  let [showEmojiBox, setshowEmojiBox] = useState(false)
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -249,6 +251,9 @@ const Message = () => {
   let handleEmoji = (e) => {
     setMsg(msg+e.emoji)
   } 
+  // let handleEmojiBox = () =>{
+  //   setshowEmojiBox(true)
+  // }
   return (
     <>
         <Grid item xs={4}>
@@ -351,11 +356,19 @@ const Message = () => {
                     <input onKeyUp={handleKeyPress} onChange={(e)=>setMsg(e.target.value)} value={msg} name='chat_msg_input' placeholder='Message'/>
                     <BsCameraFill onClick={handleOpen} className='camera_icon'/>
                     <AudioRecorder className="voice_icon" onRecordingComplete={addAudioElement} />
-                    <div className='emoji_box'>
-                      <EmojiPicker onEmojiClick={(e)=>handleEmoji(e)}/>
-                    </div>
+                    <BsEmojiSmileFill onClick={() => setshowEmojiBox(!showEmojiBox)} className='emoji_click'/>
+                    {showEmojiBox &&
+                      <div className='emoji_box'>
+                        <EmojiPicker onEmojiClick={(e)=>handleEmoji(e)}/>
+                      </div>      
+                    }
                   </div>
-                    <button onClick={handleSendMsg}>Send</button>
+                      {msg != "" 
+                      ?
+                      <button onClick={handleSendMsg}>Send</button>
+                      :
+                      <></>
+                      }
                     <Modal
                       open={open}
                       onClose={handleClose}

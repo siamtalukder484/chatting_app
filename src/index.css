@@ -669,4 +669,15 @@ ul,ol{
 .emoji_box{
     position: absolute;
     right: 50px;
+    top: -450px;
+}
+.emoji_click{
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
 }
