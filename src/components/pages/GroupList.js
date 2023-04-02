@@ -76,7 +76,7 @@ const GroupList = () => {
   return (
     <div className='box_main'>
         <Flex className='title_wrapper'>
-            <BoxTitle title="All Group List" className='box_title'/>
+            <BoxTitle title="Group" className='box_title'/>
         </Flex>
         <div className='group_wrapper'>
             {allglist.length > 0 ? allglist.map(item=>(
